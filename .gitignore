@@ -1,0 +1,11 @@
+.idea
+/src/node_modules
+/src/public/build
+/src/storage/*.key
+/src/vendor
+/src/resources/.output
+/src/resources/.nuxt
+/src/.env
+/src/yarn-error.log
+.env
+/docker/mysql

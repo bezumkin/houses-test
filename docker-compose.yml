@@ -1,0 +1,53 @@
+version: '3.9'
+services:
+
+  mysql:
+    image: mysql:${MYSQL_VERSION}
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USERNAME}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+     - ./docker/mysql:/var/lib/mysql
+    ports:
+      - ${MYSQL_PORT}:3306
+
+  nginx:
+    image: nginx:${NGINX_VERSION}
+    environment:
+      - NGINX_PORT=${NGINX_PORT}
+    volumes:
+      - ./docker/nginx:/etc/nginx/templates
+      - ./src:/laravel
+    ports:
+      - ${NGINX_PORT}:80
+      - ${NODE_DEV_PORT}:3000
+      - "24678:24678"
+    depends_on:
+      - php-fpm
+      - mysql
+    working_dir: /laravel
+
+  php-fpm:
+    build:
+      context: ./docker/php-fpm
+      args:
+        - PHP_VERSION
+    volumes:
+      - ./src:/laravel
+    depends_on:
+      - mysql
+    working_dir: /laravel
+
+  node:
+    build:
+      context: ./docker/node
+      args:
+        - NODE_VERSION
+    volumes:
+      - ./src:/laravel
+    depends_on:
+      - nginx
+    network_mode: 'service:nginx'
+    working_dir: /laravel

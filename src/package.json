@@ -1,0 +1,13 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "nuxi dev ./resources",
+        "build": "nuxi build ./resources",
+        "generate": "nuxi generate ./resources && rm -rf ./public/build && mv ./resources/.output/public ./public/build && rm ./resources/dist"
+    },
+    "dependencies": {
+        "element-plus": "^2.2.20",
+        "nuxt": "^3.0.0-rc.13",
+        "sass": "^1.56.1"
+    }
+}
